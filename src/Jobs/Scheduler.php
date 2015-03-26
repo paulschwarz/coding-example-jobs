@@ -8,13 +8,13 @@ class Scheduler
      * @param array $queue
      * @return Sequence
      */
-    public function make_sequence($queue)
+    public function makeSequence($queue)
     {
         $sequence = new Sequence([]);
-        $jobs = $this->create_job_queue($queue);
+        $jobs = $this->createJobsFromQueue($queue);
         while(count($jobs))
         {
-            $this->resolve_dependency_path($path, $jobs, current($jobs));
+            $this->resolveDependencyPath($path, $jobs, current($jobs));
             foreach ($path as $name)
             {
                 unset($jobs[$name]);
@@ -32,7 +32,7 @@ class Scheduler
      * @param Job[] $jobs
      * @param Job $job
      */
-    private function resolve_dependency_path(&$path = [], $jobs, Job $job)
+    private function resolveDependencyPath(&$path = [], $jobs, Job $job)
     {
         $dependency = $job->getDependency();
         if ($dependency)
@@ -44,7 +44,7 @@ class Scheduler
                     throw new \InvalidArgumentException('You have a circular dependency.');
                 }
                 $jobs[$dependency]->setUsed();
-                $this->resolve_dependency_path($path, $jobs, $jobs[$dependency]);
+                $this->resolveDependencyPath($path, $jobs, $jobs[$dependency]);
             }
         }
         $path[] = $job->getName();
@@ -54,7 +54,7 @@ class Scheduler
      * @param array $queue
      * @return Job[]
      */
-    private function create_job_queue($queue)
+    private function createJobsFromQueue($queue)
     {
         $jobs = [];
         foreach ($queue as $name => $dependency)

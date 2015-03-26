@@ -14,13 +14,13 @@ class SchedulerSpec extends ObjectBehavior
 
     function it_makes_an_empty_sequence_for_an_empty_jobs_string()
     {
-        $this->make_sequence([])
+        $this->makeSequence([])
             ->toArray()->shouldReturn([]);
     }
 
     function it_makes_a_job_sequence_with_a_single_job()
     {
-        $sequence = $this->make_sequence([
+        $sequence = $this->makeSequence([
             'a' => NULL,
         ]);
         $sequence->containsExactly(['a'])->shouldReturn(TRUE);
@@ -28,7 +28,7 @@ class SchedulerSpec extends ObjectBehavior
 
     function it_makes_a_job_sequence_with_three_independent_jobs()
     {
-        $sequence = $this->make_sequence([
+        $sequence = $this->makeSequence([
             'a' => NULL,
             'b' => NULL,
             'c' => NULL,
@@ -38,7 +38,7 @@ class SchedulerSpec extends ObjectBehavior
 
     function it_makes_a_job_sequence_where__c_before_b()
     {
-        $sequence = $this->make_sequence([
+        $sequence = $this->makeSequence([
             'a' => NULL,
             'b' => 'c',
             'c' => NULL,
@@ -49,7 +49,7 @@ class SchedulerSpec extends ObjectBehavior
 
     function it_makes_a_job_sequence_where__f_before_c__c_before_b__b_before_e__a_before_d()
     {
-        $sequence = $this->make_sequence([
+        $sequence = $this->makeSequence([
             'a' => NULL,
             'b' => 'c',
             'c' => 'f',
@@ -66,7 +66,7 @@ class SchedulerSpec extends ObjectBehavior
 
     function it_throws_exception_when_c_depends_on_c()
     {
-        $this->shouldThrow(new \InvalidArgumentException('"c" cannot depend on itself.'))->during('make_sequence', [[
+        $this->shouldThrow(new \InvalidArgumentException('"c" cannot depend on itself.'))->during('makeSequence', [[
             'a' => NULL,
             'b' => NULL,
             'c' => 'c',
@@ -75,7 +75,7 @@ class SchedulerSpec extends ObjectBehavior
 
     function it_throws_exception_when_there_is_a_circular_dependency()
     {
-        $this->shouldThrow(new \InvalidArgumentException('You have a circular dependency.'))->during('make_sequence', [[
+        $this->shouldThrow(new \InvalidArgumentException('You have a circular dependency.'))->during('makeSequence', [[
             'a' => NULL,
             'b' => 'c',
             'c' => 'f',
