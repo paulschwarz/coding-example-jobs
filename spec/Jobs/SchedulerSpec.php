@@ -25,4 +25,17 @@ class SchedulerSpec extends ObjectBehavior
 			'a',
 		]);
 	}
+
+	function it_makes_a_job_sequence_with_three_independent_jobs()
+	{
+		$this->make_sequence([
+			'a' => NULL,
+			'b' => NULL,
+			'c' => NULL,
+		])->shouldReturn([
+			'a',
+			'b',
+			'c',
+		]);
+	}
 }
