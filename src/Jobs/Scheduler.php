@@ -4,37 +4,22 @@ namespace Jobs;
 
 class Scheduler
 {
-    public function make_sequence($jobs = [])
+    public function make_sequence($jobs)
     {
-		$jobs = $this->sanitize($jobs);
+        $sequence = new Sequence([]);
 
-		$sequence = [];
-		foreach ($jobs as $job => $dependant)
-		{
-			if ($dependant)
-			{
-				array_push($sequence, $job);
-			}
-			else
-			{
-				array_unshift($sequence, $job);
-			}
-		}
+        foreach ($jobs as $job_name => $dependency_name)
+        {
+            if ($dependency_name)
+            {
+                $sequence->append($job_name);
+            }
+            else
+            {
+                $sequence->prepend($job_name);
+            }
+        }
 
-		return $sequence;
+        return $sequence;
     }
-
-	/**
-	 * @param $jobs
-	 *
-	 * @return array
-	 */
-	private function sanitize($jobs)
-	{
-		if ($jobs === "")
-		{
-			$jobs = [];
-		}
-		return $jobs;
-	}
 }
