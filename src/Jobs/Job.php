@@ -4,6 +4,11 @@ namespace Jobs;
 
 class Job
 {
+    private
+        $name,
+        $depends,
+        $used = FALSE;
+
     public function __construct($name, $depends)
     {
         if ($name === $depends)
@@ -22,5 +27,15 @@ class Job
     public function getDependency()
     {
         return $this->depends;
+    }
+
+    public function isUsed()
+    {
+        return $this->used;
+    }
+
+    public function setUsed()
+    {
+        $this->used = TRUE;
     }
 }

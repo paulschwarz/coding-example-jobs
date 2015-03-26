@@ -4,45 +4,63 @@ namespace Jobs;
 
 class Scheduler
 {
-    public function make_sequence($jobs)
+    /**
+     * @param array $queue
+     * @return Sequence
+     */
+    public function make_sequence($queue)
     {
         $sequence = new Sequence([]);
-        $job_queue = $this->create_job_queue($jobs);
-        while(count($job_queue))
+        $jobs = $this->create_job_queue($queue);
+        while(count($jobs))
         {
-            $this->resolve_dependency_path($path, $job_queue, current($job_queue));
-            foreach ($path as $job_name)
+            $this->resolve_dependency_path($path, $jobs, current($jobs));
+            foreach ($path as $name)
             {
-                unset($job_queue[$job_name]);
-                if ( ! $sequence->contains($job_name))
+                unset($jobs[$name]);
+                if ( ! $sequence->contains($name))
                 {
-                    $sequence->append($job_name);
+                    $sequence->append($name);
                 }
             }
         }
         return $sequence;
     }
 
-    private function resolve_dependency_path(&$path = [], $job_queue, Job $job)
+    /**
+     * @param array $path
+     * @param Job[] $jobs
+     * @param Job $job
+     */
+    private function resolve_dependency_path(&$path = [], $jobs, Job $job)
     {
         $dependency = $job->getDependency();
         if ($dependency)
         {
-            if (isset($job_queue[$job->getDependency()]))
+            if (isset($jobs[$dependency]))
             {
-                $this->resolve_dependency_path($path, $job_queue, $job_queue[$job->getDependency()]);
+                if ($jobs[$dependency]->isUsed())
+                {
+                    throw new \InvalidArgumentException('You have a circular dependency.');
+                }
+                $jobs[$dependency]->setUsed();
+                $this->resolve_dependency_path($path, $jobs, $jobs[$dependency]);
             }
         }
         $path[] = $job->getName();
     }
 
-    private function create_job_queue($jobs)
+    /**
+     * @param array $queue
+     * @return Job[]
+     */
+    private function create_job_queue($queue)
     {
-        $job_queue = [];
-        foreach ($jobs as $job_name => $dependency_name)
+        $jobs = [];
+        foreach ($queue as $name => $dependency)
         {
-            $job_queue[$job_name] = new Job($job_name, $dependency_name);
+            $jobs[$name] = new Job($name, $dependency);
         }
-        return $job_queue;
+        return $jobs;
     }
 }

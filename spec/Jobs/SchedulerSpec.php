@@ -72,4 +72,16 @@ class SchedulerSpec extends ObjectBehavior
             'c' => 'c',
         ]]);
     }
+
+    function it_throws_exception_when_there_is_a_circular_dependency()
+    {
+        $this->shouldThrow(new \InvalidArgumentException('You have a circular dependency.'))->during('make_sequence', [[
+            'a' => NULL,
+            'b' => 'c',
+            'c' => 'f',
+            'd' => 'a',
+            'e' => NULL,
+            'f' => 'b',
+        ]]);
+    }
 }

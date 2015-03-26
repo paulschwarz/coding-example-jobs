@@ -26,4 +26,15 @@ class JobSpec extends ObjectBehavior
     {
         $this->getDependency()->shouldReturn('b');
     }
+
+    function it_returns_false_when_unused()
+    {
+        $this->isUsed()->shouldReturn(FALSE);
+    }
+
+    function it_returns_true_when_used()
+    {
+        $this->setUsed();
+        $this->isUsed()->shouldReturn(TRUE);
+    }
 }
