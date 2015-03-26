@@ -65,4 +65,16 @@ class SequenceSpec extends ObjectBehavior
         $this->beConstructedWith(['b', 'c']);
         $this->shouldThrow(new \InvalidArgumentException('Job "a" does not exist.'))->during('isBefore', ['a', 'b']);
     }
+
+    function it_returns_true_if_it_contains_a()
+    {
+        $this->beConstructedWith(['a', 'b']);
+        $this->contains('a')->shouldReturn(TRUE);
+    }
+
+    function it_returns_false_if_it_does_not_contain_a()
+    {
+        $this->beConstructedWith(['c', 'b']);
+        $this->contains('a')->shouldReturn(FALSE);
+    }
 }

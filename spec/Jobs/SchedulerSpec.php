@@ -36,7 +36,7 @@ class SchedulerSpec extends ObjectBehavior
         $sequence->containsExactly(['a', 'b', 'c'])->shouldReturn(TRUE);
     }
 
-    function it_makes_a_job_sequence_where_b_depends_on_c()
+    function it_makes_a_job_sequence_where__c_before_b()
     {
         $sequence = $this->make_sequence([
             'a' => NULL,
@@ -45,5 +45,31 @@ class SchedulerSpec extends ObjectBehavior
         ]);
         $sequence->containsExactly(['a', 'b', 'c'])->shouldReturn(TRUE);
         $sequence->isBefore('c', 'b')->shouldReturn(TRUE);
+    }
+
+    function it_makes_a_job_sequence_where__f_before_c__c_before_b__b_before_e__a_before_d()
+    {
+        $sequence = $this->make_sequence([
+            'a' => NULL,
+            'b' => 'c',
+            'c' => 'f',
+            'd' => 'a',
+            'e' => 'b',
+            'f' => NULL,
+        ]);
+        $sequence->containsExactly(['a', 'b', 'c', 'd', 'e', 'f'])->shouldReturn(TRUE);
+        $sequence->isBefore('f', 'c')->shouldReturn(TRUE);
+        $sequence->isBefore('c', 'b')->shouldReturn(TRUE);
+        $sequence->isBefore('b', 'e')->shouldReturn(TRUE);
+        $sequence->isBefore('a', 'd')->shouldReturn(TRUE);
+    }
+
+    function it_throws_exception_when_c_depends_on_c()
+    {
+        $this->shouldThrow(new \InvalidArgumentException('"c" cannot depend on itself.'))->during('make_sequence', [[
+            'a' => NULL,
+            'b' => NULL,
+            'c' => 'c',
+        ]]);
     }
 }

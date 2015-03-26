@@ -26,6 +26,11 @@ class Sequence
         return $this->jobs;
     }
 
+    public function contains($job)
+    {
+        return in_array($job, $this->jobs);
+    }
+
     public function containsExactly($jobs)
     {
         return count(array_diff($this->jobs, $jobs)) === 0 && count(array_diff($jobs, $this->jobs)) === 0;
@@ -48,5 +53,4 @@ class Sequence
             return $position;
         }
     }
-
 }
