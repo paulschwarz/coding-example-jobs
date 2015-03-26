@@ -33,9 +33,22 @@ class SchedulerSpec extends ObjectBehavior
 			'b' => NULL,
 			'c' => NULL,
 		])->shouldReturn([
+			'c',
+			'b',
+			'a',
+		]);
+	}
+
+	function it_makes_a_job_sequence_where_b_depends_on_c()
+	{
+		$this->make_sequence([
+			'a' => NULL,
+			'b' => 'c',
+			'c' => NULL,
+		])->shouldReturn([
+			'c',
 			'a',
 			'b',
-			'c',
 		]);
 	}
 }
