@@ -11,4 +11,9 @@ class SchedulerSpec extends ObjectBehavior
     {
         $this->shouldHaveType('Jobs\Scheduler');
     }
+
+	function it_makes_an_empty_sequence_for_an_empty_jobs_string()
+	{
+		$this->make_sequence("")->shouldReturn([]);
+	}
 }
