@@ -1,0 +1,11 @@
+{
+    "name": "codingchallenge/jobs",
+    "description": "Coding challenge for Jobs example",
+    "authors": [
+        {
+            "name": "Paul Schwarz",
+            "email": "paulsschwarz@gmail.com"
+        }
+    ],
+    "require": {}
+}
