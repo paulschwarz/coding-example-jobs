@@ -6,6 +6,13 @@ class Scheduler
 {
     public function make_sequence($jobs)
     {
-        return [];
+		if ($jobs)
+		{
+			return array_keys($jobs);
+		}
+		else
+		{
+			return [];
+		}
     }
 }

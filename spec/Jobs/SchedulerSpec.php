@@ -16,4 +16,13 @@ class SchedulerSpec extends ObjectBehavior
 	{
 		$this->make_sequence("")->shouldReturn([]);
 	}
+
+	function it_makes_a_job_sequence_with_a_single_job()
+	{
+		$this->make_sequence([
+			'a' => NULL,
+		])->shouldReturn([
+			'a',
+		]);
+	}
 }
